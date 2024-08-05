@@ -22,32 +22,47 @@ npm run migrate
 
 # 项目结构
 ```bash
-./prisma
-└── schema.prisma  #定义数据模型
 ./src
 ├── app.js
+├── controllers # 处理 HTTP 请求的业务逻
+│   └── userController.js
 ├── middlewares
 │   └── authMiddleware.js
-├── models
+├── models # 数据库CURD
 │   ├── prisma.js
-│   └── user.js 
-├── routes
-│   ├── index.js  #定义路由
+│   └── userModel.js
+├── routes # 自定义路由
+│   ├── index.js
 │   └── userRoutes.js
 └── utils
     └── index.js
+./prisma
+├── migrations
+│   ├── 20240804104919_
+│   │   └── migration.sql
+│   └── migration_lock.toml
+└── schema.prisma
 ```
 
 # 环境变量
 ```bash
-PORT=
+PORT=3000
+# 数据库的URL
 DATABASE_URL=
+# token加密密钥
 SECRET_KEY=
+```
+
+# 中间件
+1. authMiddleware.js 对指定路由进行鉴权
+```js
+  app.use(authMiddleware(SECRET_KEY, { path: [/^\/user/] }))
 ```
 
 # 开发流程
 1. 定义数据模型schema.prisma
-2. 定义路由 routes/index.js
-3. 编写curd models/user.js
+2. 定义路由 routes/
+3. 编写curd models/
+4. 便携HTTP请求业务逻辑 controllers/
 
 

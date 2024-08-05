@@ -76,16 +76,14 @@ const all = async (ctx) => {
   return success(allData)
 }
 
-const show = async (ctx) => {
-  const { userId } = ctx.request.query
-
+const show = async ({ userId }) => {
   const user = await prisma.user.findFirstOrThrow({
     where: {
       userId: parseInt(userId, 10),
     },
   })
 
-  return success(user)
+  return user;
 }
 
 const destroy = async (ctx) => {
@@ -145,13 +143,7 @@ const update = async (ctx) => {
   return success(user)
 }
 
-const create = async (ctx) => {
-  const {
-    username,
-    email,
-    password,
-  } = ctx.request.body
-
+const create = async ({ username, email, password }) => {
   const user = await prisma.user.create({
     data: {
       username,
@@ -160,7 +152,17 @@ const create = async (ctx) => {
     },
   })
 
-  return success(user)
+  return user
+}
+
+const find = async ({ email }) => {
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      email
+    },
+  })
+
+  return user
 }
 
 module.exports = {
@@ -170,4 +172,5 @@ module.exports = {
   create,
   destroy,
   update,
+  find
 }

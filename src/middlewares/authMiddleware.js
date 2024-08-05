@@ -1,24 +1,37 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
+const { fail } = require('../utils/index');
+
 const SECRET_KEY = process.env.SECRET_KEY
 
 // 鉴权中间件
-const authMiddleware = async (ctx: Context, next: Next) => {
-  const token = ctx.cookies.get('token');
+const authMiddleware = (secret, options = {}) => {
+  return async (ctx, next) => {
+    const { path = [] } = options;
+    const requiresAuth = path.some(regex => regex.test(ctx.url));
+    console.log(requiresAuth)
 
-  if (!token) {
-    ctx.status = 401;
-    ctx.body = { error: 'Unauthorized' };
-    return;
-  }
+    if (requiresAuth) {
+      const token = ctx.cookies.get('token');
 
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    ctx.state.user = decoded;
-    await next();
-  } catch (err) {
-    ctx.status = 401;
-    ctx.body = { error: 'Invalid token' };
-  }
+      console.log(token)
+      if (!token) {
+        ctx.status = 401;
+        ctx.body = fail('Unauthorized', 10000)
+      } else {
+        try {
+          const decoded = jwt.verify(token, SECRET_KEY);
+          console.log(decoded)
+          ctx.state.user = decoded;
+          await next();
+        } catch (err) {
+          ctx.status = 401;
+          ctx.body = fail('Invalid token', 10000)
+        }
+      }
+    } else {
+      await next();
+    }
+  };
 };
 
 module.exports = authMiddleware

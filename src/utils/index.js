@@ -6,7 +6,7 @@ const success = (data) => {
   }
 }
 
-const fail = (message, code, data) => {
+const fail = (message, code = 32000, data) => {
   return {
     message,
     code,
