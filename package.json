@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/app.js",
+    "start": "cross-env NODE_ENV=local nodemon ./src/app.js",
     "start:test": "cross-env NODE_ENV=test node ./src/app.js",
     "start:prod": "cross-env NODE_ENV=production node ./src/app.js",
     "migrate": "npx prisma migrate dev"
@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@koa/multer": "^3.0.2",
+    "ali-oss": "^6.20.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",

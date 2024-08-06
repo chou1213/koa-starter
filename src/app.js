@@ -9,7 +9,7 @@ config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env' })
 
 const app = new Koa();
 const port = process.env.PORT || 3000;
-const SECRET_KEY = process.env.SECRET_KEY
+const SECRET_KEY = process.env.SECRET_KEY;
 
 app
   .use(authMiddleware(SECRET_KEY, { path: [/^\/user/] }))
